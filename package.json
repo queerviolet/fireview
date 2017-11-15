@@ -1,6 +1,6 @@
 {
-  "name": "spark",
-  "version": "0.0.0",
+  "name": "fireview",
+  "version": "0.0.1",
   "description": "",
   "main": "dist/map.js",
   "module": "index.js",
