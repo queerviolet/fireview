@@ -1,43 +1,80 @@
-Can't start a fire without a spark.
+# Fireview
 
-# Get started:
+A quick helper to map data in Firebase to React views. Supports Cloud Firestore.
 
+Requires React 16, since the `<Map>` component renders an array.
+
+## Example
+
+Here's our message component:
+
+```jsx
+  // Message.jsx
+  // from and body are fields in the database.
+  // _ref is the reference we're rendering. We can use this
+  // to mutate the database.
+  const Message = ({from, body, _ref}) =>
+    <li>
+      <strong>{from}:</strong> {body}
+      <a onClick={() => _ref.set(null)}>⛔️</a>  { /* Delete this message */ }
+    </li>
 ```
-git clone git@github.com:queerviolet/spark.git
-cd spark
-npm install
-npx firebase init
-npm start
+
+We're going to map a collection of messages to it.
+
+Whether you're using Firestore or the legacy Realtime database, `<Map>`
+listens to the reference you provide and updates the view when the database changes.
+
+### With Cloud Firestore
+
+```jsx
+  // Messages-Firestore.jsx
+  export default () => 
+    <ul>
+      <Map from={
+          // In a real app, you'd probably take in this reference
+          // as a prop.
+
+          // from accepts any Firestore query.
+          firebase.firestore()
+            .collection('messages')
+        }
+        // Loading takes a component that is displayed while
+        // the first snapshot is loading.
+        Loading={() => 'Loading...'}
+
+        // Render takes a component that renders each document in
+        // the returned query
+        Render={Message}
+
+        // Empty takes a component displayed if the collection is empty.
+        Empty={() => 'No messages here.'}
+      />
 ```
 
-# Frontend
+`<Map>` renders your `Render` component once for each Document in the query
+you provide it (so if your query references a single Document, you only get
+that one.)
 
-The frontend starts in [`main.js`](./main.js). The root of the react app
-is in [`App.jsx`](./App.jsx).
+### With the Realtime Database
 
-# Functions
+Using the Realtime DB is very similar. One difference is that you need to
+give `<Map>` an `each` prop if you want your `Render` component to be mounted
+once per each child (rather than once for the entire path).
 
-Write your [Cloud Functions](https://firebase.google.com/docs/functions/) in
-[`functions/index.js`](./functions/index.js).
+(This is because the Realtime Database doesn't distinguish between "Documents"
+and regular values.)
 
-You can require node modules from Cloud Functions normally. Be sure to `npm install` them
-*inside* the functions directory (it has its own `package.json`).
-
-Sadly, you can't use `import` statements, and you can't `require` code that does.
-Don't despair, the library provides a workaround.
-
-## The Library
-
-The library is defined in [`lib/index.js`](lib/index.js). In the library, you
-can `import` code from your project normally, and anything you `export` will be
-available to your Cloud Functions.
-
-It is a bridge between Cloud Function code and the rest of your
-project's code.
-
-# Hot loading
-
-Hot module replacement is enabled, and the react-hot-loader plugins are applied.
-
-Your React components will update in place after you save them, without losing
-their state.
+```jsx
+  // Messages-Realtime.jsx    
+  export default () =>
+    <ul>      
+      <Map each from={rt.ref('/chatrooms/welcome')}
+        // ⬆️ "each" means we'll map over all children of this path
+        // Everything else behaves the same.
+        Loading={() => 'Loading...'}
+        Render={Message}
+        Empty={() => 'No messages here.'}
+      />
+    </ul>
+```

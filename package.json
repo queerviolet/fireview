@@ -2,7 +2,8 @@
   "name": "spark",
   "version": "0.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/map.js",
+  "module": "index.js",
   "scripts": {
     "postinstall": "cd functions && npm install",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -23,6 +24,7 @@
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
+    "firebase": "^4.6.2",
     "firebase-tools": "^3.14.0",
     "react-hot-loader": "^3.1.2",
     "through2": "^2.0.3",
@@ -33,6 +35,7 @@
   "dependencies": {
     "chokidar": "^1.7.0",
     "minimist": "^1.2.0",
+    "operon": "0.0.1",
     "react": "^16.1.0",
     "react-dom": "^16.1.0"
   }
