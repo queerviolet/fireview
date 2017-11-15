@@ -69,7 +69,7 @@ and regular values.)
   // Messages-Realtime.jsx    
   export default () =>
     <ul>      
-      <Map each from={rt.ref('/chatrooms/welcome')}
+      <Map each from={firebase.database().ref('/chatrooms/welcome')}
         // ⬆️ "each" means we'll map over all children of this path
         // Everything else behaves the same.
         Loading={() => 'Loading...'}
