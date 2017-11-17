@@ -1,6 +1,6 @@
 {
   "name": "fireview",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "main": "dist/fireview.js",
   "module": "index.js",

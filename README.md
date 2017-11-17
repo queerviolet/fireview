@@ -6,6 +6,14 @@ Requires React 16, since the `<Map>` component renders an array.
 
 ## Example
 
+[This very repo](https://github.com/queerviolet/fireview) is an example of how to use
+Fireview:
+  * [`demo/Firestore.jsx`](./demo/Firestore.jsx) contains views for a Firestore db
+  * [`demo/Realtime.jsx`](./demos/Realtime.jsx) contains views for a Realtime db
+  * [`fire/index.js`](./fire/index.js) contains models for both
+
+In an ideal world, our views wouldn't care about what DB they're rendering. And, indeed, the views are almost identical. A future version of Fireview will likely change the API to allow them to be entirely identical.
+
 Here's our message component:
 
 ```jsx
@@ -27,8 +35,10 @@ listens to the reference you provide and updates the view when the database chan
 
 ### With Cloud Firestore
 
-```jsx
+```jsx  
   // Messages-Firestore.jsx
+  import {Map} from 'fireview'
+
   export default () => 
     <ul>
       <Map from={
@@ -67,7 +77,9 @@ once per each child (rather than once for the entire path).
 and regular values.)
 
 ```jsx
-  // Messages-Realtime.jsx    
+  // Messages-Realtime.jsx 
+  import {Map} from 'fireview'
+
   export default () =>
     <ul>      
       <Map each from={firebase.database().ref('/chatrooms/welcome')}
@@ -78,4 +90,35 @@ and regular values.)
         Empty={() => 'No messages here.'}
       />
     </ul>
+```
+
+## Using AuthProvider
+
+You tend to need information about the currently logged in user in various
+places around your app.
+
+`<AuthProvider>` provides auth information.
+
+`withAuth` is a HOC that takes this auth
+information and adds `_user` and `_auth` props to the component it wraps.
+
+```jsx
+import * as firebase from 'firebase'
+
+import {AuthProvider, withAuth} from 'fireview'
+
+export default () =>
+  <AuthProvider auth={firebase.auth()}>
+    {/* ShowUid is a direct child here, but it doesn't have to be. */}
+    <ShowUid />
+  </AuthProvider>
+
+const ShowUid = withAuth(
+  ({_user: user, _auth: auth}) =>
+    user
+      ? user.uid
+      : <a onClick={() => auth.signInAnonymously()}>
+          Sign in
+        </a>
+)
 ```
