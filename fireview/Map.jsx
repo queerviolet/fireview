@@ -28,6 +28,10 @@ firestore.Query [adopts] (listen) (
   (query, onSnapshot) => query.onSnapshot(onSnapshot)
 )
 
+firestore.DocumentReference [adopts] (listen) (
+  (doc, onSnapshot) => doc.onSnapshot(onSnapshot)
+)
+
 firestore.QuerySnapshot [adopts] (map) (
   ({docs}, mapper) => docs.map(mapper)
 )
@@ -105,49 +109,107 @@ class RealtimeSnapshot {
   }
 }
 
-export class Map extends React.Component {
+const withProps = operon('withProps(Component|ReactElement, props) -> ReactElement (with props)')
+Object [adopts] (withProps) (
+  (obj, props) => React.isValidElement(obj)
+    ? React.cloneElement(obj, props)
+    : null
+)
+
+Function [adopts] (withProps) (
+  (F, props) => <F {...props} />
+)
+
+const None = {
+  [withProps]() { return null }
+}
+
+const Maybe = value =>
+  value === null || typeof value === 'undefined'
+    ? None
+    : value
+
+export default class Map extends React.Component {
   state = {snapshot: null}
 
   componentDidMount() {
     this.listen(this.props)
+    this.listenAuth(this.props)
   }
 
   componentWillReceiveProps(next) {
-    this.listen(next)
+    const {from, auth} = this.props
+    if (next.from !== from) this.listen(next)
+    if (next.auth !== auth) this.listenAuth(next)
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe && this.unsubscribe()
+    this.unsubscribeAuth && this.unsubscribeAuth()
   }
 
   listen({from}) {
     if (this.unsubscribe) this.unsubscribe()
-    this.props.from [listen] (snapshot => this.setState({snapshot}))
+    if (!from) return // No ref to listen to
+    this.unsubscribe =
+      from [listen] (snapshot => this.setState({snapshot}))
+  }
+
+  listenAuth({auth}) {
+    if (this.unsubscribeAuth) this.unsubscribeAuth()
+    if (!auth) return // No auth to listen to
+    this.unsubscribeAuth =
+      auth.onAuthStateChanged(user => this.setState({user}))
   }
 
   render() {
     const {from,
            each, // For the realtime DB, explicilty iterate over children
+           children,
+           auth,
            Render,
            Loading,
-           Empty,
-           children} = this.props
-        , {snapshot} = this.state
+           Empty} = this.props
+        , {snapshot, user} = this.state
 
     const mapOp = each
       ? mapEachChild
       : map
     
+    if (!from)
+      return Maybe(Render) [withProps] ({
+        _user: user,
+        _auth: auth,
+        children
+      })
+
     if (!snapshot)
-      return Loading
-        ? <Loading from={from} />
-        : null
+      return Maybe(Loading) [withProps] ({
+          _ref: from,
+          _auth: auth,
+          _user: user,
+          children
+      })
     
     if (snapshot[isEmpty]())
-      return Empty
-        ? <Empty snapshot={snapshot}>{children}</Empty>
-        : null
-
-    return snapshot [mapOp] (_ =>
-      <Render key={_[key]()} _ref={_.ref} _snap={_} {..._[value]()}>{
+      return Maybe(Empty) [withProps] ({
+        _snap: snapshot,
+        _auth: auth,
+        _user: user,
         children
-      }</Render>
+      })
+
+    if (!Render) return null
+    return snapshot [mapOp] (_ =>
+      Render [withProps] ({
+        key: _[key](),
+        _user: user,
+        _auth: auth,
+        _ref: _.ref,
+        _snap: _,
+        ..._[value](),
+        children
+      })
     )
   }
 }

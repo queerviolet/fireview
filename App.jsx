@@ -1,43 +1,34 @@
 import React from 'react'
-import * as firebase from 'firebase'
-import 'firebase/firestore'
+import {BrowserRouter as Router, Route} from 'react-router-dom'
 
-window.firebase = firebase
+import {
+  auth,
+  signInAnonymously,
+  signInWithGoogle,
+  firestoreRoomById,
+  realtimeRoomById} from '~/fire'
 
-firebase.initializeApp({
-  apiKey: 'AIzaSyBzz-Wq2dzMgM7E8cdSYnYoX5fbVUT-XQo',
-  authDomain: 'firebones-6bc2a.firebaseapp.com',
-  databaseURL: 'https://firebones-6bc2a.firebaseio.com',
-  projectId: 'firebones-6bc2a',
-  storageBucket: 'firebones-6bc2a.appspot.com',
-  messagingSenderId: '1030378391678'
-})
+import {AuthProvider} from '~/fireview'
 
-const db = firebase.firestore()   
-const messages = db.collection('messages')
+import FirestoreChat from '~/demo/Firestore'
+import RealtimeChat from '~/demo/Realtime'
 
-import {Map} from './Map'
-
-const Message = ({from, body, _ref}) =>
-  <div>
-    <h2>{from}</h2>
-    {body}
-  </div>
-
-const rt = firebase.database()
-
-
-window.fire = firebase
 export default () =>
-  <div>
-    <Map from={messages}
-      Loading={() => 'Loading...'}
-      Render={Message}
-      Empty={() => 'No messages here.'}
-    />
-    <Map each from={rt.ref('/chatrooms/welcome')}
-      Loading={() => 'Loading...'}
-      Render={Message}
-      Empty={() => 'No messages here.'}
-    />
-  </div>
+  <AuthProvider auth={auth}>
+    <nav>
+      <button onClick={signInAnonymously}>Sign in Anonymously</button>
+      <button onClick={signInWithGoogle}>Sign in with Google</button>
+    </nav>,
+    <Router>
+      <main>
+        <Route path="/firestore/:id" component={
+          ({match: {params: {id}}}) =>
+            <FirestoreChat room={firestoreRoomById(id)} />
+        } />
+        <Route path="/realtime/:id" component={
+          ({match: {params: {id}}}) =>
+            <RealtimeChat room={realtimeRoomById(id)} />
+        } />
+      </main>
+    </Router>
+  </AuthProvider>

@@ -50,6 +50,7 @@ listens to the reference you provide and updates the view when the database chan
         // Empty takes a component displayed if the collection is empty.
         Empty={() => 'No messages here.'}
       />
+    </ul>
 ```
 
 `<Map>` renders your `Render` component once for each Document in the query

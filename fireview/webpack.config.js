@@ -1,13 +1,18 @@
 'use strict'
 const webpack = require('webpack')
-    , {resolve} = require('path')
+    , {dirname, resolve} = require('path')
 
+const parent = dirname(__dirname)
 module.exports = {
-  entry: './Map.js',
+  entry: './index.js',
+  context: __dirname,
   output: {
-    path: resolve(__dirname, 'dist'),
-    filename: 'map.js',
+    path: resolve(parent, 'dist'),
+    filename: 'fireview.js',
     libraryTarget: 'umd',
+  },
+  resolve: {
+    extensions: ['.jsx', '.js', '.json'],
   },
   module: {
     rules: [
@@ -25,11 +30,6 @@ module.exports = {
         }
       }
     ]
-  },
-  resolve: {
-      alias: {
-        '~': __dirname,
-      }
   },
   externals: {
     firebase: true,

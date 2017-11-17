@@ -2,7 +2,7 @@
   "name": "fireview",
   "version": "0.0.2",
   "description": "",
-  "main": "dist/map.js",
+  "main": "dist/fireview.js",
   "module": "index.js",
   "scripts": {
     "postinstall": "cd functions && npm install",
@@ -10,11 +10,11 @@
     "start": "node dev",
     "build": "webpack -p",
     "watch-lib": "npm run build-lib -- -w",
-    "build-lib": "webpack --config lib/webpack.config.js",
+    "build-lib": "webpack --config fireview/webpack.config.js",
     "build-lib-prod": "npm run build-lib -- -p",
     "build-prod": "npm run build-lib-prod && npm run build",
     "deploy": "npm run build-prod && npx firebase deploy",
-    "prepare": "webpack -p --config webpack.lib.js"
+    "prepare": "build-lib-prod"
   },
   "keywords": [],
   "author": "Ashi Krishnan <hi@ashi.io>",
@@ -22,12 +22,15 @@
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
+    "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "firebase": "^4.6.2",
     "firebase-tools": "^3.14.0",
     "react-hot-loader": "^3.1.2",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
     "through2": "^2.0.3",
     "webpack": "^3.8.1",
     "webpack-dev-server": "^2.9.4",

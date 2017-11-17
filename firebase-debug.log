@@ -1,0 +1,36 @@
+[debug] [2017-11-17T03:17:50.214Z] ----------------------------------------------------------------------
+[debug] [2017-11-17T03:17:50.217Z] Command:       /Users/ashi/.nvm/versions/node/v8.5.0/bin/node /Users/ashi/hack/fireview/node_modules/.bin/firebase serve
+[debug] [2017-11-17T03:17:50.217Z] CLI Version:   3.14.0
+[debug] [2017-11-17T03:17:50.217Z] Platform:      darwin
+[debug] [2017-11-17T03:17:50.217Z] Node Version:  v8.5.0
+[debug] [2017-11-17T03:17:50.218Z] Time:          Thu Nov 16 2017 22:17:50 GMT-0500 (EST)
+[debug] [2017-11-17T03:17:50.218Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2017-11-17T03:17:50.226Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2017-11-17T03:17:50.227Z] > authorizing via signed-in user
+[debug] [2017-11-17T03:17:50.229Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2017-11-17T03:17:50.230Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token { refresh_token: '1/SPWHi-zUbbEeNpJJBVeOyAsWnW0Lq_xTWUlYSq1LoBI',
+  client_id: '563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com',
+  client_secret: 'j9iVZfS8kkCEFUPaAeJV0sAi',
+  grant_type: 'refresh_token',
+  scope: 'email https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/firebase openid' } 
+ Thu Nov 16 2017 22:17:50 GMT-0500 (EST)
+[debug] [2017-11-17T03:17:50.402Z] <<< HTTP RESPONSE 200
+[debug] [2017-11-17T03:17:50.408Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/firebones-6bc2a  
+ Thu Nov 16 2017 22:17:50 GMT-0500 (EST)
+[debug] [2017-11-17T03:17:51.010Z] <<< HTTP RESPONSE 200
+[debug] [2017-11-17T03:17:51.010Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/firebones-6bc2a/tokens  
+ Thu Nov 16 2017 22:17:51 GMT-0500 (EST)
+[debug] [2017-11-17T03:17:51.483Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/Users/ashi/hack/fireview'...
+[info] 
+[debug] [2017-11-17T03:17:51.485Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/firebones-6bc2a  
+ Thu Nov 16 2017 22:17:51 GMT-0500 (EST)
+[debug] [2017-11-17T03:17:52.073Z] <<< HTTP RESPONSE 200
+[debug] [2017-11-17T03:17:52.073Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/1030378391678/clients/_:getWebAppConfig  
+ Thu Nov 16 2017 22:17:52 GMT-0500 (EST)
+[debug] [2017-11-17T03:17:52.405Z] <<< HTTP RESPONSE 200
+[info] i  hosting: Serving hosting files from: public
+[info] ✔  hosting: Local server: http://localhost:5000
+

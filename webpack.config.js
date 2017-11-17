@@ -44,8 +44,8 @@ const isHot = env => !isProd(env)
 
 const entries = (env, entry) =>
   isHot(env)
-    ? ['react-hot-loader/patch', entry]
-    : entry
+    ? ['react-hot-loader/patch', 'babel-polyfill', entry]
+    : ['babel-polyfill', entry]
 
 const plugins = env => isHot(env) ? [
   new webpack.HotModuleReplacementPlugin,  // Enable HMR globally
@@ -69,7 +69,10 @@ const babel = env => ({
   loader: 'babel-loader', 
   options: {
     presets: [
-      ['env', {modules: false}],
+      ['env', {
+        modules: false,
+        browser: 'last 2 versions',
+      }],
       'stage-2',
       'react',
     ],
