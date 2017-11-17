@@ -14,7 +14,7 @@
     "build-lib-prod": "npm run build-lib -- -p",
     "build-prod": "npm run build-lib-prod && npm run build",
     "deploy": "npm run build-prod && npx firebase deploy",
-    "prepare": "build-lib-prod"
+    "prepare": "npm run build-lib-prod"
   },
   "keywords": [],
   "author": "Ashi Krishnan <hi@ashi.io>",
