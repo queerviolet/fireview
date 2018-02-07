@@ -41,6 +41,6 @@
   },
   "dependencies": {
     "operon": "0.0.1",
-    "react": "^16.1.0",
+    "react": "^16.1.0"
   }
 }
