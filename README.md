@@ -100,7 +100,26 @@ places around your app.
 `<AuthProvider>` provides auth information.
 
 `withAuth` is a HOC that takes this auth
-information and adds `_user` and `_auth` props to the component it wraps.
+information and adds a `withAuth` prop to the component it wraps. This prop
+has the shape:
+
+```js
+{
+  // The current user
+  user: firebase.auth.User,
+  
+  // The firebase Auth interface
+  auth: firebase.auth.Auth,
+
+  // True once the auth state has resolved (once
+  // onAuthStateChanged has emitted at least once).
+  ready: bool,
+}
+```
+
+(Note: the HOC also adds `_user`, `_auth`, and `_authReady` props, but
+these are uglier and will be removed in the future. Use the nested
+object instead.)
 
 ```jsx
 import * as firebase from 'firebase'
@@ -114,7 +133,7 @@ export default () =>
   </AuthProvider>
 
 const ShowUid = withAuth(
-  ({_user: user, _auth: auth}) =>
+  ({withAuth: {user, auth}}) =>
     user
       ? user.uid
       : <a onClick={() => auth.signInAnonymously()}>

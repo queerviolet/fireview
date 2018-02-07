@@ -18,6 +18,10 @@ Function [adopts] (withAuth) (
         return this.state && this.state.user
       }
 
+      get ready() {
+        return !!this.state
+      }
+
       componentDidMount() {
         this.unsubscribe =
           this.auth.onAuthStateChanged(user => this.setState({user}))
@@ -28,12 +32,13 @@ Function [adopts] (withAuth) (
       }
 
       render() {
-        const childProps = {...this.props}
-        delete childProps.auth
+        const {auth, user, ready} = this
+            , withAuth = {auth, user, ready}
         return <Wrapped
-          _auth={this.auth}
-          _user={this.user}
-          _authReady={!!this.state}
+          withAuth={withAuth}
+          _auth={auth}
+          _user={user}
+          _authReady={ready}
           {...this.props} />
       }
     }
@@ -46,7 +51,7 @@ Function [adopts] (withAuth) (
 // As a Component, withAuth adds _user and _auth
 // to all its children.
 Object [adopts] (withAuth) (
-  withAuth(({children, _auth, _user}) => applyPropsDeep(children, {_auth, _user}))
+  withAuth(({children, withAuth}) => applyPropsDeep(children, withAuth))
 )
 
 const applyPropsDeep = (children, props) => React.Children.map(children,
