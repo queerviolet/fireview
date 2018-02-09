@@ -33,7 +33,7 @@ const Message = ({from, body, _ref, _user}) =>
   </div>
 
 const ChatEntry = withAuth(
-  ({messages, _user: user}) =>
+  ({messages, withAuth: {user}}) =>
     user
       ? <form onSubmit={submitMessage(messages, user)}>
           <Map from={userById(user.uid)} Empty={() => 'What?'} Render={DisplayNameEntry} />

@@ -109,43 +109,25 @@ class RealtimeSnapshot {
   }
 }
 
-const withProps = operon('withProps(Component|ReactElement, props) -> ReactElement (with props)')
-Object [adopts] (withProps) (
-  (obj, props) => React.isValidElement(obj)
-    ? React.cloneElement(obj, props)
-    : null
-)
 
-Function [adopts] (withProps) (
-  (F, props) => <F {...props} />
-)
-
-const None = {
-  [withProps]() { return null }
-}
-
-const Maybe = value =>
-  value === null || typeof value === 'undefined'
-    ? None
-    : value
+import maybe from './maybe'
+import withProps from './withProps'
+import withAuth from './withAuth'
 
 export default class Map extends React.Component {
   state = {snapshot: null}
 
   componentDidMount() {
     this.listen(this.props)
-    this.listenAuth(this.props)
   }
 
   componentWillReceiveProps(next) {
-    const {from, auth} = this.props
+    const {from} = this.props
     if (next.from !== from) this.listen(next)
-    if (next.auth !== auth) this.listenAuth(next)
   }
 
   componentWillUnmount() {
     this.unsubscribe && this.unsubscribe()
-    this.unsubscribeAuth && this.unsubscribeAuth()
   }
 
   listen({from}) {
@@ -155,21 +137,15 @@ export default class Map extends React.Component {
       from [listen] (snapshot => this.setState({snapshot}))
   }
 
-  listenAuth({auth}) {
-    if (this.unsubscribeAuth) this.unsubscribeAuth()
-    if (!auth) return // No auth to listen to
-    this.unsubscribeAuth =
-      auth.onAuthStateChanged(user => this.setState({user}))
-  }
-
   render() {
     const {from,
            each, // For the realtime DB, explicilty iterate over children
            children,
-           auth,
            Render,
            Loading,
-           Empty} = this.props
+           Empty,
+           ...otherProps
+          } = this.props
         , {snapshot, user} = this.state
 
     const mapOp = each
@@ -177,14 +153,14 @@ export default class Map extends React.Component {
       : map
     
     if (!from)
-      return Maybe(Render) [withProps] ({
+      return maybe(Render) [withProps] ({
         _user: user,
         _auth: auth,
         children
       })
 
     if (!snapshot)
-      return Maybe(Loading) [withProps] ({
+      return maybe(Loading) [withProps] ({
           _ref: from,
           _auth: auth,
           _user: user,
@@ -192,7 +168,7 @@ export default class Map extends React.Component {
       })
     
     if (snapshot[isEmpty]())
-      return Maybe(Empty) [withProps] ({
+      return maybe(Empty) [withProps] ({
         _snap: snapshot,
         _auth: auth,
         _user: user,
@@ -213,3 +189,5 @@ export default class Map extends React.Component {
     )
   }
 }
+
+const MapWithAuth = 
